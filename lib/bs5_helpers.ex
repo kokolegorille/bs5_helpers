@@ -3,16 +3,12 @@ defmodule Bs5Helpers do
   Documentation for `Bs5Helpers`.
   """
 
-  @doc """
-  Hello world.
+  alias __MODULE__.{
+    Dropdown,
+    Form
+  }
 
-  ## Examples
+  defdelegate dropdown(label, links_or_dividers, opts \\ []), to: Dropdown
 
-      iex> Bs5Helpers.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  defdelegate input(form, field, opts \\ []), to: Form
 end
