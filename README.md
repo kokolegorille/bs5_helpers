@@ -1,6 +1,12 @@
 # Bs5Helpers
 
-**TODO: Add description**
+Phoenix Bootstrap 5 Helpers.
+
+Add it as a dependency, and update your app_web.ex to import in view_helpers()
+
+http://blog.plataformatec.com.br/2016/09/dynamic-forms-with-phoenix/
+
+https://getbootstrap.com/
 
 ## Installation
 
