@@ -6,10 +6,75 @@ defmodule Bs5Helpers.Form do
   use Phoenix.HTML
   alias Bs5Helpers.ErrorHelpers
 
+  @doc """
+  Form Input helper
+  http://blog.plataformatec.com.br/2016/09/dynamic-forms-with-phoenix/
+
+  ## Options
+
+    * `:as` - set the field type, eg: as: :textarea.
+    * `:html_opts` - additional input opts, eg: html_opts: [rows: 10].
+    * `:error` - set asdditional error field, eg: title and slug.
+
+  ### For select
+
+    * `:options` - the list of options for a select input.
+
+  """
   def input(form, field, opts \\ []) do
     type = opts[:as] || Phoenix.HTML.Form.input_type(form, field)
     error_field = opts[:error] || field
     do_input(type, error_field, form, field, opts)
+  end
+
+  @doc """
+  Renders multiple checkboxes.
+
+  ref: https://dev.to/ricardoruwer/many-to-many-associations-in-elixir-and-phoenix-21pm
+
+  ## Example
+
+      iex> multiselect_checkboxes(
+             f,
+             :amenities,
+             Enum.map(@amenities, fn c -> { c.name, c.id } end),
+             selected: Enum.map(@changeset.data.amenities,&(&1.id))
+           )
+      <div class="checkbox">
+        <label>
+          <input name="property[amenities][]" id="property_amenities_1" type="checkbox" value="1" checked>
+          <input name="property[amenities][]" id="property_amenities_2" type="checkbox" value="2">
+        </label>
+      </div
+  """
+
+  def multiselect_checkboxes(form, field, options, opts \\ []) do
+    {selected, _} = get_selected_values(form, field, opts)
+    selected_as_strings = Enum.map(selected, &"#{&1}")
+
+    # Use inline mode by default
+    class = opts[:class] || "form-check form-check-inline"
+    # By default, input is active (not disabled)
+    disabled = opts[:disabled]
+
+    for {value, key} <- options, into: [] do
+      id = input_id(form, field, key)
+
+      content_tag(:div, class: class) do
+        [
+          tag(:input,
+            name: input_name(form, field) <> "[]",
+            id: id,
+            class: "form-check-input",
+            type: "checkbox",
+            value: key,
+            checked: Enum.member?(selected_as_strings, "#{key}"),
+            disabled: disabled
+          ),
+          content_tag(:label, value, class: "form-check-label", for: id)
+        ]
+      end
+    end
   end
 
   # Checkbox
@@ -223,4 +288,21 @@ defmodule Bs5Helpers.Form do
   defp input(type, form, field, options, input_opts) do
     apply(Phoenix.HTML.Form, type, [form, field, options, input_opts])
   end
+
+  # For multiple checkboxes
+  defp get_selected_values(form, field, opts) do
+    {selected, opts} = Keyword.pop(opts, :selected)
+    param = field_to_string(field)
+
+    case form do
+      %{params: %{^param => sent}} ->
+        {sent, opts}
+
+      _ ->
+        {selected || input_value(form, field), opts}
+    end
+  end
+
+  defp field_to_string(field) when is_atom(field), do: Atom.to_string(field)
+  defp field_to_string(field) when is_binary(field), do: field
 end

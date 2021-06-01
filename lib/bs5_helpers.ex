@@ -11,4 +11,6 @@ defmodule Bs5Helpers do
   defdelegate dropdown(label, links_or_dividers, opts \\ []), to: Dropdown
 
   defdelegate input(form, field, opts \\ []), to: Form
+
+  defdelegate multiselect_checkboxes(form, field, options, opts \\ []), to: Form
 end
