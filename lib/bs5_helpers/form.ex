@@ -139,7 +139,7 @@ defmodule Bs5Helpers.Form do
 
     input_opts =
       html_opts ++
-        [class: "form-control #{state_class(form, field, error_field)}"]
+        [class: "form-select #{state_class(form, field, error_field)}"]
 
     content_tag :div, wrapper_opts do
       label = label(form, field, label_txt, label_opts)
