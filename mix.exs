@@ -21,7 +21,7 @@ defmodule Bs5Helpers.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix_html, "~> 2.14"}
+      {:phoenix_html, "~> 3.0"}
     ]
   end
 end
