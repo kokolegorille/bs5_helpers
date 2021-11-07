@@ -4,9 +4,14 @@ defmodule Bs5Helpers do
   """
 
   alias __MODULE__.{
+    Alert,
     Dropdown,
     Form
   }
+
+  defdelegate alert(message, mode), to: Alert
+
+  defdelegate live_alert(message, mode), to: Alert
 
   defdelegate dropdown(label, links_or_dividers, opts \\ []), to: Dropdown
 
